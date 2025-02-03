@@ -1,16 +1,15 @@
 package day06;
 
-import java.lang.foreign.ValueLayout;
-import java.security.interfaces.RSAKey;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.PseudoColumnUsage;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
+
 
 
 //입차
