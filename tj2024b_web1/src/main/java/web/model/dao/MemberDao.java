@@ -3,10 +3,12 @@ package web.model.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import web.model.dto.MemberDto;
+import web.model.dto.PointDto;
 
 // @Getter // 클래스내 모든 멤버변수에 getter 적용.
 @NoArgsConstructor( access = lombok.AccessLevel.PRIVATE ) // 클래스내 디폴트생성자를 private 적용 
@@ -119,5 +121,23 @@ public class MemberDao extends Dao {
 		return false; // 수정 실패 했을때.
 	} // f end
 	
-	
+	// [6] 포인트 전체 출력
+	public ArrayList<PointDto> pointAll(int loginMno){
+		ArrayList<PointDto> list = new ArrayList<PointDto>();
+		try {
+			String sql = "select * from pointlog where mno = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, loginMno);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				PointDto pointDto = new PointDto();
+				pointDto.setPono(rs.getInt("pono"));
+				pointDto.setPocount(rs.getInt("pocount"));
+				pointDto.setPocomment(rs.getString("pocomment"));
+				pointDto.setPodate(rs.getString("podate"));
+				pointDto.setMno(rs.getInt("mno"));
+			}
+		}catch (Exception e) {System.out.println(e);}
+		return list;
+	}
 } // class end 
