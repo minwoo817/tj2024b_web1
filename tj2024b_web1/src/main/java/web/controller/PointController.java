@@ -1,7 +1,6 @@
 package web.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -10,25 +9,41 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import web.model.dao.MemberDao;
-import web.model.dto.PointDto;
 
 @WebServlet("/point")
 public class PointController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ArrayList<PointDto> result = null;
-		HttpSession session = req.getSession();
-		Object object = session.getAttribute("loginMno");
-		if(object != null) {
+		System.out.println(" /point get ok ");
+
+		Object result = null;
+		
+		Object object = req.getSession().getAttribute("loginMno");
+		if( object != null ) {
 			int loginMno = (Integer)object;
-			result = MemberDao.getInstance().pointAll(loginMno);
+			result = MemberDao.getInstance().getPointLog( loginMno );
 		}
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonResult = mapper.writeValueAsString(result);
+		String jsonResult = mapper.writeValueAsString( result );
+		
 		resp.setContentType("application/json");
-		resp.getWriter().print(jsonResult);
-	
-	}
-}
+		resp.getWriter().print( jsonResult );
+		
+	} // f end 
+} // class end 
+
+
+
+// * 동일한 HTTP 메소드 안에서 서로 다른 서비스 구분 하는 방법 
+// [1] '포인트 로그 내역 전체 조회' 와 '현재 남은 포인트 조회' 를 쿼리스트링 이용하여 서비스/기능 구분 
+// type변수 : 조회 서비스/기능 방법 식별 , all : '포인트 로그 내역 전체 조회' , current : '현재 남은 포인트 조회' 
+// '포인트 로그 내역 전체 조회' : localhost:8080/point?type=all
+// '현재 남은 포인트 조회' : localhost:8080/point?type=current
+//String type = req.getParameter("type");
+//// [2] 타입 정보에 따라 구분 
+//if( type.equals("all") ) {
+//// 전체 조회 dao 호출 
+//}else if( type.equals("current") ) {
+//// 남은 포인트 조회 dao 호출 
+//}else { }
